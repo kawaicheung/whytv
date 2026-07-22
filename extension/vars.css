@@ -2,7 +2,7 @@
     
   --ytv-font-family--sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --ytv-font-family--tv: "VT323", "Courier New", monospace;
-  --ytv-font-family--orbitron: "Orbitron", var(var(--ytv-font-family--sans-serif));
+  --ytv-font-family--orbitron: "Orbitron", var(--ytv-font-family--sans-serif);
   
   /* Drives index.html's decorative dial size (and everything scaled off
      it — arrow, numbers, radius, the wrapper's centering compensation). */

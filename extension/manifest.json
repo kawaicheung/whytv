@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "WHYTV",
+  "version": "0.3.0",
+  "description": "Configure up to 13 YouTube TV channels and flip between them like a real TV.",
+  "action": {
+    "default_title": "WHYTV"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://tv.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["vars.css", "content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "tabs", "tabGroups", "sidePanel"],
+  "host_permissions": ["https://tv.youtube.com/*"]
+}

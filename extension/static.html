@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>No Signal</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./vars.css">
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .bars {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bars-top {
+    display: flex;
+    flex: 0 0 82%;
+  }
+
+  .bars-bottom {
+    display: flex;
+    flex: 1;
+  }
+
+  .bar {
+    flex: 1;
+  }
+
+  /* Same overlay as content.css's .retro-tv-wrapper::after, driven by the
+     same --scanline-opacity var (set in static.js from the TRK slider) —
+     this page has no player wrapper of its own, so it lands on .bars. */
+  .bars::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,var(--scanline-opacity, 0.165)) 0px,
+      rgba(0,0,0,var(--scanline-opacity, 0.165)) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    mix-blend-mode: multiply;
+  }
+
+  /* Same look as the real channels' OSD banner (content.css's
+     .retro-tv-osd) but permanently shown rather than fading after 5s —
+     there's no video to identify here beyond the channel number itself. */
+  .osd {
+    position: absolute;
+    top: 20px;
+    right: 26px;
+    font-family: var(--ytv-font-family--tv);
+    font-size: 8vw;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.85), 0 0 14px rgba(255,200,120,0.35);
+    padding: 4px 16px 6px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="bars">
+    <div class="bars-top">
+      <div class="bar" style="background:#c3c3c3"></div>
+      <div class="bar" style="background:#c6c93c"></div>
+      <div class="bar" style="background:#4fc3c9"></div>
+      <div class="bar" style="background:#4cbd3f"></div>
+      <div class="bar" style="background:#b232ae"></div>
+      <div class="bar" style="background:#b5211c"></div>
+      <div class="bar" style="background:#1226b0"></div>
+    </div>
+    <div class="bars-bottom">
+      <div class="bar" style="background:#1226b0"></div>
+      <div class="bar" style="background:#131313"></div>
+      <div class="bar" style="background:#b232ae"></div>
+      <div class="bar" style="background:#131313"></div>
+      <div class="bar" style="background:#4fc3c9"></div>
+      <div class="bar" style="background:#131313"></div>
+      <div class="bar" style="background:#c3c3c3"></div>
+    </div>
+  </div>
+  <div class="osd" id="osd"></div>
+  <script src="static.js"></script>
+</body>
+</html>

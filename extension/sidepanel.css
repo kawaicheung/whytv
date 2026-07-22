@@ -1,0 +1,683 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  min-height: 100vh;
+  color: var(--ytv-color-paper);
+}
+body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+  padding: 10px;
+  background-color: var(--ytv-color-white);
+}
+
+#content {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  corner-shape: squircle;
+  min-height: 0;
+  border-radius: 50px;
+  padding: 5vh 0;
+  border: 4px solid transparent;
+  /* Same gradient-border trick as .dial-grid/.power-row: the striped fill
+     clips to the padding-box, the metal conic-gradient clips to the
+     border-box, so only the 4px frame shows the metal underneath. */
+  background:
+    linear-gradient(
+      to bottom,
+      var(--ytv-color-panel-hi),
+      var(--ytv-color-panel-lo)
+    ) padding-box,
+    repeating-linear-gradient(
+      to bottom,
+      var(--ytv-color-overlay-black-75) 0px,
+      var(--ytv-color-overlay-black-75) 2px,
+      var(--ytv-color-overlay-white-02) 2px,
+      var(--ytv-color-overlay-white-02) 4px
+    ) padding-box;
+
+  background-blend-mode: multiply, multiply, normal;
+  /* Inset shadow just inside the metal frame so the whole panel reads as
+     sunk into the case rather than sitting flush with it. */
+  box-shadow:
+    inset 0 6px 18px var(--ytv-color-overlay-black-65),
+    inset 0 -4px 14px var(--ytv-color-overlay-black-50),
+    inset 0 0 0 1px var(--ytv-color-overlay-black-35);
+}
+
+.brand {
+  width: 100%;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--ytv-color-phosphor-dim);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+.brand-title {
+  font-family: var(--ytv-font-family--orbitron);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.2rem;
+}
+
+/* Sits inside #content (rebuilt into its template on every render — see
+   sidepanel.js), pinned to the upper-right corner of the case rather than
+   living in the outer chrome bar. Same metal palette as .dial-metal/
+   .dial-knob-face, just linear instead of conic, so it reads as a little
+   riveted cap. */
+.gear {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 5;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ytv-color-plastic-raised);
+  background:
+    repeating-linear-gradient(180deg,
+      var(--ytv-color-overlay-white-30) 0px, var(--ytv-color-overlay-white-30) 0.5px,
+      var(--ytv-color-overlay-black-10) 0.5px, var(--ytv-color-overlay-black-10) 1px,
+      transparent 1px, transparent 1.5px),
+    linear-gradient(180deg, var(--ytv-color-metal-hi), var(--ytv-color-metal-mid) 55%, var(--ytv-color-metal-lo));
+  box-shadow:
+    inset 0 0 0 1px var(--ytv-color-overlay-black-35),
+    inset 0 2px 3px var(--ytv-color-overlay-black-40),
+    inset 0 -1px 2px var(--ytv-color-overlay-white-40),
+    0 2px 5px var(--ytv-color-overlay-black-50);
+
+  & svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  &:hover,
+  &.on {
+    color: var(--ytv-color-plastic-deep);
+  }
+}
+
+/* ---------- Dial ---------- */
+.dial-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 18px 0 6px;
+}
+
+.dial {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  cursor: pointer;
+  /* Barely-there sheen on the black face: lightest at the top (0%/100%,
+     same value so the wrap is seamless), darkening toward the bottom. */
+  background: conic-gradient(from 0deg, var(--ytv-color-dial-ring-hi) 0%,var(--ytv-color-dial-ring-lo) 14%, var(--ytv-color-black) 25%, var(--ytv-color-black) 75%, var(--ytv-color-dial-ring-lo) 86%, var(--ytv-color-dial-ring-hi) 100%);
+  border-radius: 50%;
+}
+
+.dial-metal {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg,
+    var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+    var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+    var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%);
+  box-shadow:
+    inset 0 0 0 3px var(--ytv-color-overlay-black-35),
+    inset 0 3px 10px var(--ytv-color-overlay-black-45),
+    inset 0 2px 4px var(--ytv-color-overlay-white-50),
+    0 3px 10px var(--ytv-color-overlay-black-55);
+  /* Ring mask: keeps the conic-gradient's full-size math intact (so its
+     angles/colors don't distort) while only painting it — background,
+     border-radius, and the box-shadow bevel together — in a band near the
+     rim. The hole reveals .dial's black background behind it. */
+  -webkit-mask-image: radial-gradient(circle, transparent 0%, transparent 65%, var(--ytv-color-black) 70%, var(--ytv-color-black) 100%);
+  mask-image: radial-gradient(circle, transparent 0%, transparent 65%, var(--ytv-color-black) 70%, var(--ytv-color-black) 100%);
+}
+
+/* The fixed indicator notch above the dial — never rotates. Whichever
+   number the rotor has carried to the top, under this arrow, is "on". */
+.dial-arrow {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 18px;
+  height: 14px;
+  margin-left: -9px;
+  z-index: 4;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  background: var(--ytv-color-gray-light);
+
+  box-shadow:
+    inset 0 2px 3px var(--ytv-color-overlay-black-15),
+    inset 0 -1px 0 var(--ytv-color-overlay-white-08);
+
+}
+
+/* The rotor: numbers + knob turn together as one physical dial face.
+   Transform sits here (not on individual numbers or the knob) so the whole
+   assembly swings as a rigid unit. */
+.dial-rotor {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.dial-num {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border-radius: 50%;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--ytv-color-label-muted);
+  text-shadow: 0 1px 0 var(--ytv-color-overlay-white-35), 0 -1px 1px var(--ytv-color-overlay-black-40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Since numbers don't counter-rotate, each one's own "bottom" already
+     faces the dial center — this tick just sits there, riding along with
+     the number's tilt instead of needing its own rotation math. */
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    width: 2px;
+    height: 6px;
+    transform: translateX(-50%);
+    background: currentColor;
+    border-radius: 1px;
+  }
+
+  /* Set once this slot's own tab has actually finished loading (see
+     loadedChannelUrls in sidepanel.js) — lights up one at a time as
+     launch()'s warm-up loop works through the channels, not all at once
+     just because a slot has a channel assigned to it. */
+  &.lit {
+    color: var(--ytv-color-white);
+    text-shadow:
+      0 0 3px var(--ytv-color-overlay-white-85),
+      0 0 9px var(--ytv-color-overlay-white-40);
+
+    &::after {
+      box-shadow: 0 0 6px var(--ytv-color-phosphor);
+    }
+  }
+
+  /* No css for now */
+  &.active {
+
+  }
+}
+
+/* The knob: a circular metal cap plus a grip handle riveted to its face —
+   rides along with the rotor, so it always faces the same way relative to
+   the numbers, as if welded to the same turning shaft. */
+.dial-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.dial-knob-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg,
+    var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+    var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+    var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%);
+  box-shadow:
+    inset 0 0 0 2px var(--ytv-color-overlay-black-30),
+    inset 0 3px 8px var(--ytv-color-overlay-black-45),
+    inset 0 -2px 5px var(--ytv-color-overlay-white-30),
+    0 2px 6px var(--ytv-color-overlay-black-60);
+
+  /* Inset disc, same conic pattern darkened via multiply so it reads as a
+     recessed inner cap rather than a flat re-tint. */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    height: 90%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background:
+      linear-gradient(var(--ytv-color-overlay-black-40), var(--ytv-color-overlay-black-40)),
+      conic-gradient(from 200deg,
+        var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+        var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+        var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%);
+    background-blend-mode: multiply;
+    box-shadow: inset 0 0 0 1px var(--ytv-color-overlay-black-30);
+  }
+}
+
+/* Grip handle: a fluted metal bar laid across the face, tapered to a slight
+   point on its top end (clip-path) and left flat/blunt on the bottom —
+   mirrors an asymmetric thumb-turn knob rather than a symmetric pointer. */
+.dial-knob-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20%;
+  height: 90%;
+  transform: translate(-50%, -50%);
+  border-radius: 14px 14px 8px 8px;
+  background:
+    linear-gradient(180deg, var(--ytv-color-overlay-white-30), var(--ytv-color-overlay-black-20)),
+    linear-gradient(90deg,
+      var(--ytv-color-metal-lo) 0%, var(--ytv-color-metal-mid) 22%, var(--ytv-color-metal-hi) 38%,
+      var(--ytv-color-white) 46%, var(--ytv-color-metal-hi) 54%, var(--ytv-color-metal-mid) 75%, var(--ytv-color-metal-lo) 100%);
+  background-blend-mode: multiply, normal;
+  box-shadow:
+    0 1px 2px var(--ytv-color-overlay-black-50),
+    inset 0 0 0 1px var(--ytv-color-overlay-black-25);
+}
+
+
+/* ---------- Power controls ---------- */
+.power-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 20px;
+  width: fit-content;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  /* Same gradient-border trick as .dial-grid: fill to the padding-box,
+     metal conic-gradient to the border-box, so only the 1px ring shows it. */
+  background:
+    linear-gradient(var(--ytv-color-bezel-face), var(--ytv-color-bezel-face)) padding-box,
+    conic-gradient(from 200deg,
+      var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+      var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+      var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%) border-box;
+  box-shadow:
+    inset 0 2px 5px var(--ytv-color-overlay-black-80),
+    inset 0 1px 0 var(--ytv-color-overlay-white-03);
+  /* Lets the two buttons tilt in 3D like a rocker switch, hinged at the
+     seam between them, instead of just flat-swapping color. The raised
+     side pops proud of the plate, so it's allowed to spill past the
+     row's own edges rather than getting clipped. */
+  perspective: 160px;
+  overflow: visible;
+}
+
+/* The hinge line between Off and On: a thin engraved groove (dark edge
+   facing the light, a sliver of highlight facing away) so the seam reads
+   as a physical crease rather than two buttons that just happen to touch. */
+.power-row::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ytv-color-overlay-black-55);
+  box-shadow: 1px 0 0 var(--ytv-color-overlay-white-20);
+  pointer-events: none;
+}
+
+.power-btn {
+  width: 50px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ytv-color-metal-text);
+  border: none;
+  text-shadow: 0 1px 0 var(--ytv-color-overlay-white-40);
+  /* Plain top-light/bottom-dark linear gradient (not the conic metal used
+     elsewhere) so the face reads as a simple brushed-metal button. */
+  background: linear-gradient(180deg, var(--ytv-color-metal-hi), var(--ytv-color-metal-mid) 60%, var(--ytv-color-metal-lo));
+ 
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  /* The side that ISN'T engaged pops up and out toward the viewer,
+     hinged at the seam it shares with the other button — same seesaw
+     read as a real rocker switch, the un-pressed paddle lifting proud of
+     the plate. Off hinges on its right edge (against On), On hinges on
+     its left edge (against Off).
+     Sign note: with the hinge at x=0 and the outer edge at negative-x
+     (Off) or positive-x (On), rotateY(θ) sends that outer edge to
+     z = -x·sinθ. To bulge toward the viewer (z>0), Off's outer edge
+     (x<0) needs a positive θ, On's (x>0) needs a negative θ. */
+  &.off {
+    border-radius: 2px 0 0 2px;
+    transform-origin: right center;
+  }
+  &.on {
+    border-radius: 0 2px 2px 0;
+    transform-origin: left center;
+  }
+}
+
+.power-row.on .power-btn.off,
+.power-row.off .power-btn.on {
+  position: relative;
+  z-index: 2;
+  /* Same darkened-multiply trick as .dial-knob-face's recessed cap — the
+     unselected side reads as unlit/shadowed next to the engaged one. */
+  background:
+    linear-gradient(var(--ytv-color-overlay-black-15), var(--ytv-color-overlay-black-15)),
+    linear-gradient(180deg, var(--ytv-color-metal-hi), var(--ytv-color-metal-mid) 60%, var(--ytv-color-metal-lo));
+  background-blend-mode: multiply;
+}
+
+.power-row.on .power-btn.off {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-left: solid 3px var(--ytv-color-gray-mid-dark);
+  transform: rotateY(28deg);
+}
+.power-row.off .power-btn.on {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-right: solid 3px var(--ytv-color-gray-mid-dark);
+  transform: rotateY(-28deg);
+}
+
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 16px;
+}
+
+
+/* ---------- Picture-control knobs (color/contrast/brightness/hue) ---------- */
+.dial-grid {
+  margin-top: auto;
+  display: grid;
+  /* Two equal columns for the four rotary knobs, plus a third narrower
+     column sized to the slider itself — the slider cell below claims it
+     with an explicit grid-row spanning both knob rows. */
+  grid-template-columns: repeat(2, 1fr) auto;
+  gap: 16px 10px;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid transparent;
+  /* Gradient border, no pseudo-element needed: the fill paints to the
+     padding-box, the metal conic-gradient paints to the border-box, and
+     with the border itself transparent only the 1px ring shows the metal
+     underneath. Same metal formula as .dial-metal/.dial-knob-face. */
+  background:
+    linear-gradient(var(--ytv-color-black), var(--ytv-color-black)) padding-box,
+    conic-gradient(from 200deg,
+      var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+      var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+      var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%) border-box;
+}
+
+.mini-dial-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-dial-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ytv-color-overlay-white-60);
+}
+
+.mini-dial {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.mini-dial-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg,
+    var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
+    var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
+    var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%);
+  box-shadow:
+    inset 0 0 0 2px var(--ytv-color-overlay-black-30),
+    inset 0 2px 6px var(--ytv-color-overlay-black-45),
+    inset 0 -2px 4px var(--ytv-color-overlay-white-30),
+    0 2px 5px var(--ytv-color-overlay-black-60);
+}
+
+.mini-dial-rotor {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.15s ease-out;
+}
+
+/* Ticks read from the knob's center out to its rim, so it doubles as a
+   hand — pivot from the bottom edge and let the rotor swing it around. */
+.mini-dial-tick {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  width: 3px;
+  height: 22px;
+  margin-left: -1.5px;
+  transform-origin: 50% 100%;
+  background: var(--ytv-color-bezel);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 1px var(--ytv-color-overlay-black-60);
+}
+
+/* ---------- Lines slider (scanline intensity) ---------- */
+.mini-slider-cell {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-slider {
+  position: relative;
+  width: 34px;
+  flex: 1;
+  min-height: 96px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.mini-slider-track {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  bottom: 6px;
+  width: 6px;
+  margin-left: -3px;
+  border-radius: 3px;
+  background: var(--ytv-color-plastic-mid);
+  box-shadow: inset 0 1px 3px var(--ytv-color-overlay-black-60), inset 0 0 0 1px var(--ytv-color-overlay-black-40);
+}
+
+/* The knob: a flat rectangular slab (not a circular cap like the mini-dials),
+   with a plain top-light/bottom-dark linear gradient rather than the conic
+   metal formula, so it reads as a straight sliding tab. */
+.mini-slider-knob {
+  position: absolute;
+  left: 50%;
+  width: 28px;
+  height: 16px;
+  transform: translate(-50%, 50%);
+  border: 1px solid var(--ytv-color-bezel);
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--ytv-color-metal-hi), var(--ytv-color-metal-mid) 60%, var(--ytv-color-metal-lo));
+  box-shadow:
+    inset 0 0 0 1px var(--ytv-color-overlay-black-30),
+    inset 0 2px 4px var(--ytv-color-overlay-black-40),
+    inset 0 -1px 3px var(--ytv-color-overlay-white-30),
+    0 2px 5px var(--ytv-color-overlay-black-60);
+}
+
+.field-label {
+  font-size: 13px;
+  color: var(--ytv-color-phosphor-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin: 10px 0 4px;
+}
+input {
+  width: 100%;
+  background: var(--ytv-color-plastic-light);
+  border: 1px solid var(--ytv-color-metal-border);
+  color: var(--ytv-color-paper);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 15px;
+  border-radius: 3px;
+}
+.add-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: var(--ytv-color-phosphor-dim);
+  color: var(--ytv-color-bezel-deep);
+  border: none;
+  padding: 9px;
+  font-family: inherit;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 15px;
+
+  &:hover { background: var(--ytv-color-phosphor); }
+  &:disabled { opacity: 0.5; cursor: default; background: var(--ytv-color-phosphor-dim); }
+}
+/* Same brushed-metal face as .power-btn, but as its own standalone rounded
+   button rather than one half of the on/off rocker. */
+.done-btn {
+  width: 100%;
+  height: 36px;
+  margin-top: 16px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ytv-color-metal-text);
+  border: none;
+  border-radius: 4px;
+  text-shadow: 0 1px 0 var(--ytv-color-overlay-white-40);
+  background: linear-gradient(180deg, var(--ytv-color-metal-hi), var(--ytv-color-metal-mid) 60%, var(--ytv-color-metal-lo));
+
+  &:active { transform: translateY(1px); }
+}
+.form-error {
+  color: var(--ytv-color-danger);
+  font-size: 13px;
+  min-height: 14px;
+  margin-top: 4px;
+}
+.scrape-results {
+  margin-top: 10px;
+}
+.scrape-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  max-height: 220px;
+  overflow-y: auto;
+
+  & li { margin-bottom: 3px; }
+}
+.scrape-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--ytv-color-plastic-light);
+  border-radius: 3px;
+  font-size: 14px;
+  cursor: pointer;
+
+  & input[type="checkbox"] { width: auto; margin: 0; }
+  & .label { flex: 1; }
+}
+.ch-list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+
+  & li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--ytv-color-plastic-light);
+    border-radius: 3px;
+    margin-bottom: 5px;
+  }
+
+  & .num { color: var(--ytv-color-phosphor-dim); font-size: 14px; width: 22px; }
+  & .label { flex: 1; font-size: 15px; }
+
+  & .remove {
+    background: none;
+    border: none;
+    color: var(--ytv-color-danger);
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 4px 6px;
+    font-family: inherit;
+  }
+}

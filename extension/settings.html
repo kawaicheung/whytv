@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WHYTV Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./vars.css">
+<link rel="stylesheet" href="./settings.css">
+</head>
+<body>
+  <div id="content">
+    <div class="film-scratches" id="filmScratches" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="settings-columns">
+      <div class="settings-col settings-col-available">
+        <div class="setup-intro">
+          <h2 class="setup-title" id="setupTitle">Setting up your WhyTV</h2>
+          <p class="setup-copy" id="setupCopy">Grabbing your YouTubeTV stations. 
+            Give it a few moments, and you'll see your list of channels to add to WhyTV.</p>
+          <p class="setup-copy" id="scanFailedMsg" hidden>Couldn't read your channels &mdash; make sure you're signed into tv.youtube.com. <a href="#" id="scanAgainLink">Scan again&hellip;</a></p>
+        </div>
+        <div id="availableSection" hidden>
+          <p class="section-label">Available channels</p>
+          <div class="available-grid" id="availableGrid"></div>
+          <button class="rescan-btn" id="rescanBtn" type="button">Scan again&hellip;</button>
+        </div>
+      </div>
+
+      <div class="settings-col settings-col-channels">
+        <p class="section-label">Channels (2&ndash;13)</p>
+        <div class="slots" id="slots"></div>
+        <p class="count" id="channelCount"></p>
+        <button class="plain-btn" id="doneBtn" type="button">Done</button>
+      </div>
+    </div>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>

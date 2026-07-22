@@ -1,0 +1,85 @@
+:root {
+    
+  --ytv-font-family--sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ytv-font-family--tv: "VT323", "Courier New", monospace;
+  --ytv-font-family--orbitron: "Orbitron", var(var(--ytv-font-family--sans-serif));
+  
+  /* Drives index.html's decorative dial size (and everything scaled off
+     it — arrow, numbers, radius, the wrapper's centering compensation). */
+  --ytv-height-deco: 168px;
+  
+  --ytv-color-phosphor: #ffb037;
+  --ytv-color-phosphor-dim: #8a5e1f;
+  --ytv-color-metal-hi: #f4f2ec;
+  --ytv-color-metal-mid: #9a958a;
+  --ytv-color-metal-lo: #5c584e;
+  --ytv-color-plastic: #000;
+  --ytv-color-plastic-light: #3d382e;
+  --ytv-color-plastic-raised: #47412f;
+  --ytv-color-paper: #eee6d6;
+  --ytv-color-danger: #c1553d;
+
+
+  /* ---------- Neutrals ---------- */
+  --ytv-color-black: #000;
+  --ytv-color-white: #fff;
+  --ytv-color-gray-light: #ccc;
+  --ytv-color-gray-mid: #666;
+  --ytv-color-gray-mid-dark: #555;
+  --ytv-color-gray-dark: #444;
+  --ytv-color-drag-over-bg: #eee;
+
+  /* ---------- Panel / bezel / dial browns (retro chassis palette) ---------- */
+  --ytv-color-panel-hi: #242424;
+  --ytv-color-panel-lo: #111;
+  --ytv-color-dial-ring-hi: #222;
+  --ytv-color-dial-ring-lo: #121212;
+  --ytv-color-bezel: #171310;
+  --ytv-color-bezel-deep: #1a1712;
+  --ytv-color-bezel-face: #16130e;
+  --ytv-color-metal-text: #4a4638;
+  --ytv-color-label-muted: #6b6559;
+  --ytv-color-metal-border: #55503f;
+  --ytv-color-plastic-mid: #3a352b;
+  --ytv-color-plastic-deep: #241f14;
+  --ytv-color-tv-bezel: #1c1912;
+  --ytv-color-osd-text: #f5e6c8;
+
+  /* ---------- Black overlays (shadows, scrims, borders) ---------- */
+  --ytv-color-overlay-black-02: rgba(0, 0, 0, 0.02);
+  --ytv-color-overlay-black-05: rgba(0, 0, 0, 0.05);
+  --ytv-color-overlay-black-10: rgba(0, 0, 0, 0.10);
+  --ytv-color-overlay-black-15: rgba(0, 0, 0, 0.15);
+  --ytv-color-overlay-black-20: rgba(0, 0, 0, 0.2);
+  --ytv-color-overlay-black-25: rgba(0, 0, 0, 0.25);
+  --ytv-color-overlay-black-30: rgba(0, 0, 0, 0.3);
+  --ytv-color-overlay-black-35: rgba(0, 0, 0, 0.35);
+  --ytv-color-overlay-black-40: rgba(0, 0, 0, 0.4);
+  --ytv-color-overlay-black-45: rgba(0, 0, 0, 0.45);
+  --ytv-color-overlay-black-50: rgba(0, 0, 0, 0.5);
+  --ytv-color-overlay-black-55: rgba(0, 0, 0, 0.55);
+  --ytv-color-overlay-black-60: rgba(0, 0, 0, 0.6);
+  --ytv-color-overlay-black-65: rgba(0, 0, 0, 0.65);
+  --ytv-color-overlay-black-75: rgba(0, 0, 0, 0.75);
+  --ytv-color-overlay-black-80: rgba(0, 0, 0, 0.8);
+  --ytv-color-overlay-black-85: rgba(0, 0, 0, 0.85);
+
+  /* ---------- White overlays (highlights, glare, faint borders) ---------- */
+  --ytv-color-overlay-white-02: rgba(255, 255, 255, 0.02);
+  --ytv-color-overlay-white-03: rgba(255, 255, 255, 0.03);
+  --ytv-color-overlay-white-06: rgba(255, 255, 255, 0.06);
+  --ytv-color-overlay-white-08: rgba(255, 255, 255, 0.08);
+  --ytv-color-overlay-white-20: rgba(255, 255, 255, 0.2);
+  --ytv-color-overlay-white-25: rgba(255, 255, 255, 0.25);
+  --ytv-color-overlay-white-30: rgba(255, 255, 255, 0.3);
+  --ytv-color-overlay-white-35: rgba(255, 255, 255, 0.35);
+  --ytv-color-overlay-white-40: rgba(255, 255, 255, 0.4);
+  --ytv-color-overlay-white-50: rgba(255, 255, 255, 0.5);
+  --ytv-color-overlay-white-60: rgba(255, 255, 255, 0.6);
+  --ytv-color-overlay-white-70: rgba(255, 255, 255, 0.7);
+  --ytv-color-overlay-white-80: rgba(255, 255, 255, 0.8);
+  --ytv-color-overlay-white-85: rgba(255, 255, 255, 0.85);
+
+  /* ---------- One-off accents ---------- */
+  --ytv-color-glow-amber: rgba(255, 200, 120, 0.35);
+}

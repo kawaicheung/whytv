@@ -58,6 +58,7 @@ function renderScanState() {
   document.getElementById("setupTitle").textContent = scanState === "succeeded"
     ? "Drag stations over to your channels"
     : "Setting up your WhyTV";
+  document.getElementById("doneBtn").disabled = scanState === "scanning";
 }
 
 function renderCount() {
@@ -201,8 +202,25 @@ async function init() {
     scrapeChannels();
   });
 
-  // Scan automatically on open.
-  scrapeChannels();
+  // Scan automatically, but only once this tab is actually the one being
+  // looked at. launch() briefly makes every tab active while it loads
+  // (same flicker every channel gets) even when it's just cycling through
+  // on power-on — Settings' activeUrl is never set at the end of that, so
+  // it gets demoted again right after "complete" fires. Checking
+  // visibility immediately would still see it as active during that
+  // window, so wait a beat for launch()'s post-load reassignment to land
+  // before deciding; a later visibilitychange (e.g. tuning to Settings
+  // for real from the dial) triggers the deferred scan then.
+  let autoScanned = false;
+  function autoScanIfVisible() {
+    if (autoScanned || document.hidden) return;
+    autoScanned = true;
+    scrapeChannels();
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) autoScanIfVisible();
+  });
+  setTimeout(autoScanIfVisible, 300);
 
   document.getElementById("doneBtn").addEventListener("click", async () => {
     const doneBtn = document.getElementById("doneBtn");

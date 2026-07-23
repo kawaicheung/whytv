@@ -120,12 +120,13 @@ async function launch(windowId) {
   const existingTabs = await chrome.tabs.query({ windowId });
   const tabsByUrl = {};
 
-  // The static page and settings are appended once here, alongside the real
+  // Static and settings are prepended once here, ahead of the real
   // channels — any empty dial slot switches to the shared static tab rather
   // than needing one of its own, and settings is just another tab in the
   // rotation (the vanity "U" slot) instead of a one-off tab created and torn
-  // down on every visit.
-  for (const channel of [...channels, { label: "STATIC", url: STATIC_URL }, { label: "SETTINGS", url: SETTINGS_URL }]) {
+  // down on every visit. Loading them first means the power-on flicker
+  // lands on those two before it ever touches a real channel tab.
+  for (const channel of [{ label: "STATIC", url: STATIC_URL }, { label: "SETTINGS", url: SETTINGS_URL }, ...channels]) {
     if (channel.url in tabsByUrl) continue; // already handled (e.g. static, deduped)
     const match = existingTabs.find((t) => t.url === channel.url);
     if (match) {

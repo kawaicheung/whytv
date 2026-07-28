@@ -5,6 +5,9 @@ html, body {
   height: 100%;
   min-height: 100vh;
   color: var(--ytv-color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 body {
   flex: 1;

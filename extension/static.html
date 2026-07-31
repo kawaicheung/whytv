@@ -9,8 +9,9 @@
   html, body {
     margin: 0;
     height: 100%;
-    background: #000;
     overflow: hidden;
+    corner-shape: squircle;
+    border-radius: 20%;
   }
 
   .bars {
@@ -58,16 +59,14 @@
      there's no video to identify here beyond the channel number itself. */
   .osd {
     position: absolute;
-    top: 20px;
-    right: 26px;
-    font-family: var(--ytv-font-family--tv);
-    font-size: 8vw;
+    top: 5%;
+    right: 6%;
+    font-family: "VT323", "Courier New", monospace;
+    font-size: 6vw;
     line-height: 1;
-    letter-spacing: 0.06em;
-    color: #fff;
+    color: var(--ytv-color-osd-text);
+    z-index: 10;
     text-shadow: 3px 3px 0 rgba(0,0,0,0.85), 0 0 14px rgba(255,200,120,0.35);
-    padding: 4px 16px 6px;
-    border-radius: 2px;
   }
 </style>
 </head>

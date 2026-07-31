@@ -57,22 +57,27 @@ body {
     inset 0 0 0 1px var(--ytv-color-overlay-black-35);
 }
 
+/* Sits inside #content (rebuilt into its template on every render — see
+   sidepanel.js), pinned to the upper-left corner of the case — same corner
+   offset as .gear's upper-right pin, just mirrored. */
 .brand {
-  width: 100%;
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  z-index: 5;
   font-size: 13px;
   letter-spacing: 0.18em;
   color: var(--ytv-color-phosphor-dim);
   text-transform: uppercase;
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  padding: 0 8px;
 }
 .brand-title {
   font-family: var(--ytv-font-family--orbitron);
   font-weight: 900;
   font-size: 14px;
   letter-spacing: 0.2rem;
+  color: var(--ytv-color-white);
 }
 
 /* Sits inside #content (rebuilt into its template on every render — see
@@ -450,10 +455,12 @@ body {
      underneath. Same metal formula as .dial-metal/.dial-knob-face. */
   background:
     linear-gradient(var(--ytv-color-black), var(--ytv-color-black)) padding-box,
-    conic-gradient(from 200deg,
-      var(--ytv-color-metal-hi), var(--ytv-color-metal-lo) 15%, var(--ytv-color-metal-hi) 30%,
-      var(--ytv-color-metal-mid) 45%, var(--ytv-color-metal-hi) 60%, var(--ytv-color-metal-lo) 75%,
-      var(--ytv-color-metal-hi) 90%, var(--ytv-color-metal-hi) 100%) border-box;
+    conic-gradient(from 0deg,
+      var(--ytv-color-metal-lo), var(--ytv-color-metal-mid) 30%,
+      var(--ytv-color-metal-mid) 45%,  var(--ytv-color-metal-lo) 100%) border-box;
+  /* Zero offset, wide blur: spreads evenly on all sides instead of
+     leaning toward one edge the way an offset drop shadow would. */
+  box-shadow: 0 0 20px 12px var(--ytv-color-overlay-black-100);
 }
 
 .mini-dial-cell {

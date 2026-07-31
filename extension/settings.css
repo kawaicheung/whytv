@@ -1,15 +1,18 @@
 html {
+  height: 100%;
+  margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;  
+  text-rendering: optimizeLegibility;
 }
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow-y: hidden;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
 
@@ -19,7 +22,11 @@ body {
   overflow: hidden;
   corner-shape: squircle;
   border-radius: 20%;
-  padding: 3vw;
+  width: 100%;
+  height: 100%;
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
   box-shadow: none;
   background: linear-gradient(to bottom, var(--ytv-color-panel-hi), var(--ytv-color-panel-lo)) padding-box, repeating-linear-gradient(to bottom, var(--ytv-color-overlay-black-75) 0px, var(--ytv-color-overlay-black-75) 2px, var(--ytv-color-overlay-white-02) 2px, var(--ytv-color-overlay-white-02) 4px) padding-box;
   background-blend-mode: multiply, multiply, normal;
@@ -47,6 +54,7 @@ body {
 }
 .settings-columns {
   display: flex;
+  width: 100%;
 }
 .settings-col {
   position: relative;

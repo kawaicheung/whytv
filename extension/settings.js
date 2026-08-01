@@ -235,10 +235,14 @@ async function init() {
     const session = res.ok ? res.session : null;
 
     if (!session) {
-      // TV's off — settings is just a standalone tab with nothing to tune
-      // away to, same as it's always worked.
+      // TV's off — save (if anything changed) then power on, same outcome
+      // as pressing ON in the side panel, landing in this tab's own window.
+      // launch() finds this settings tab already open and reuses it rather
+      // than closing it out from under itself.
       if (changed) await setChannels(updated);
-      window.close();
+      const win = await chrome.windows.getCurrent();
+      await send({ type: "launch", windowId: win.id });
+      doneBtn.disabled = false;
       return;
     }
 

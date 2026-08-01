@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "WHYTV",
-  "version": "0.3.0",
+  "name": "WHYTV: Youtube TV with the feel of antenna TV",
+  "version": "1.0.0",
   "description": "YouTube TV with the feel of old-school antenna TV. Configure up to 13 channels.",
   "action": {
     "default_title": "WHYTV"

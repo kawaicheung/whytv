@@ -42,6 +42,13 @@ body {
   margin: 0 0 6px;
   color: var(--ytv-color-white);
 }
+.channels-title {
+  font-weight: 300;
+  letter-spacing: -0.5px;
+  font-size: 20px;
+  margin: 0 0 8px;
+  color: var(--ytv-color-white);
+}
 .setup-copy {
   font-size: 16px;
   line-height: 1.5;
@@ -129,6 +136,7 @@ body {
   gap: 6px;
   max-height: 50vh;
   overflow-y: auto;
+  padding-bottom: 100px;
   scrollbar-width: thin;
   scrollbar-color: var(--ytv-color-metal-mid) var(--ytv-color-overlay-black-40);
   -webkit-mask-image: linear-gradient(to bottom, var(--ytv-color-black) 70%, transparent 100%);
@@ -160,10 +168,6 @@ body {
   color: var(--ytv-color-white);
   overflow-wrap: break-word;
   white-space: normal;
-
-  &:last-child {
-    margin-bottom: 100px;
-  }
 }
 .available-tile:active { cursor: grabbing; }
 .available-empty {

@@ -307,6 +307,16 @@ async function scrapeChannels() {
   }
 }
 
+// Backs Settings' "Update channels" button — a manually-opened /live tab
+// (left over from browsing YouTube TV outside the extension) would otherwise
+// sit there stale once the channel list it was showing no longer matches
+// what's saved.
+async function closeLiveTab() {
+  const tabs = await chrome.tabs.query({ url: GUIDE_URL });
+  if (tabs.length) await chrome.tabs.remove(tabs.map((t) => t.id));
+  return { ok: true };
+}
+
 async function stop(exceptTabId) {
   const session = await getSession();
   const sessionTabIds = session ? Object.values(session.tabsByUrl) : [];
@@ -406,6 +416,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     else if (msg.type === "stop") sendResponse(await stop(sender.tab ? sender.tab.id : null));
     else if (msg.type === "getTvFocus") sendResponse(await getTvFocus());
     else if (msg.type === "scrapeGuide") sendResponse(await scrapeChannels());
+    else if (msg.type === "closeLiveTab") sendResponse(await closeLiveTab());
     else if (msg.type === "getSession") sendResponse({ ok: true, session: await getSession() });
     else sendResponse({ ok: false, error: "unknown-message" });
   })();

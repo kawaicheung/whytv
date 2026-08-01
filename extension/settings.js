@@ -58,7 +58,6 @@ function renderScanState() {
   document.getElementById("setupTitle").textContent = scanState === "succeeded"
     ? "Drag stations over to your channels"
     : "Setting up your WhyTV";
-  document.getElementById("doneBtn").disabled = scanState === "scanning";
 }
 
 function renderCount() {
@@ -225,6 +224,8 @@ async function init() {
   document.getElementById("doneBtn").addEventListener("click", async () => {
     const doneBtn = document.getElementById("doneBtn");
     doneBtn.disabled = true;
+
+    send({ type: "closeLiveTab" });
 
     const updated = draft.slice();
     while (updated.length && !updated[updated.length - 1]) updated.pop();

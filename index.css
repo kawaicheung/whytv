@@ -64,7 +64,7 @@ h2 {
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   letter-spacing: 0.18em;
   color: var(--ytv-color-white);
-  text-shadow: rgba(0, 0, 0, 0.35) 0px 2px 2px;
+  text-shadow: rgba(0, 0, 0, 1) 0px 2px 2px;
   text-transform: uppercase;
   margin-bottom: 0;
 }
@@ -338,6 +338,12 @@ p {
 /* ---------- Phone layout: stack the header and paragraphs, drop the
    decorative dial assembly entirely (no room for it at this size). ---------- */
 @media (max-width: 600px) {
+
+  body {
+    place-items: start end;
+    margin-top: 10vh;
+  }
+      
   .container {
     width: 100%;
     min-width: 0;

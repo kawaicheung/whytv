@@ -88,10 +88,10 @@ a {
 
 p {
   font-family: var(--ytv-font-family--tv);
-  font-size: clamp(1rem, 1.5vw, 1.4rem);
+  font-size: clamp(1.2rem, 1.5vw, 1.4rem);
   letter-spacing: 0.3px;
   color: var(--ytv-color-white);
-  line-height: 1.45;
+  line-height: calc(1.2 * clamp(1.2rem, 1.5vw, 1.4rem));
 
   span {
     display: inline;
